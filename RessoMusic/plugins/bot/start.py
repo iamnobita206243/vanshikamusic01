@@ -31,7 +31,6 @@ YUMI_PICS = [
     "https://files.catbox.moe/om8z08.jpg",
     "https://files.catbox.moe/4g9nyc.jpg",
     "https://files.catbox.moe/2z12ap.jpg",
-    "https://files.catbox.moe/hc9qka.mp4",
 ]
 
 GREET = ["💞", "🥂", "🔍", "🧪", "🥂", "⚡️", "🔥"]
@@ -271,6 +270,7 @@ async def welcome(client, message: Message):
 
         except Exception as ex:
             print(ex)
+
 
 
 
