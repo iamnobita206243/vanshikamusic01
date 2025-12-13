@@ -153,32 +153,6 @@ async def start_pm(client, message: Message, _):
                 text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
             )
 
-# ========================= EXTRA PROMO MESSAGE =========================
-@app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS, group=5)
-async def start_promo_message(client, message: Message):
-
-    await asyncio.sleep(1)
-
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    "🎬 Get Video",
-                    url="https://t.me/Instaviralvideoinsta_bot?start=starting"
-                )
-            ]
-        ]
-    )
-
-    await message.reply_text(
-        "<b>55 min video</b>\n"
-        "<blockquote>https://t.me/+PgDkmlvsfrtlZDdh</blockquote>\n\n"
-        "<b>Insta video link uploaded</b>\n\n"
-        "<b>Bot</b> @Instaviralvideoinsta_bot",
-        reply_markup=keyboard
-    )
-
-
 # ========================= GROUP START =========================
 @app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
 @LanguageStart
@@ -296,4 +270,5 @@ async def welcome(client, message: Message):
 
         except Exception as ex:
             print(ex)
+
 
