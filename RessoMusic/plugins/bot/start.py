@@ -28,9 +28,10 @@ from strings import get_string
 from RessoMusic.misc import SUDOERS
 
 YUMI_PICS = [
-    "https://files.catbox.moe/x832ly.jpg",
-    "https://files.catbox.moe/y2to84.jpg",
-    "https://files.catbox.moe/qmdqx8.jpg",
+    "https://files.catbox.moe/om8z08.jpg",
+    "https://files.catbox.moe/4g9nyc.jpg",
+    "https://files.catbox.moe/2z12ap.jpg",
+    "https://files.catbox.moe/hc9qka.mp4",
 ]
 
 GREET = ["💞", "🥂", "🔍", "🧪", "🥂", "⚡️", "🔥"]
@@ -270,5 +271,6 @@ async def welcome(client, message: Message):
 
         except Exception as ex:
             print(ex)
+
 
 
