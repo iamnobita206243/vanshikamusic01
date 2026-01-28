@@ -1,21 +1,22 @@
-import aiohttp
-
-BASE = "https://batbin.me/"
+import requests
 
 
-async def post(url: str, *args, **kwargs):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, *args, **kwargs) as resp:
-            try:
-                data = await resp.json()
-            except Exception:
-                data = await resp.text()
-        return data
+class HotyBin:
+    def __init__(self, text: str):
+        self.text = text
 
+    def paste(self):
+        try:
+            r = requests.post(
+                "https://nekobin.com/api/documents",
+                json={"content": self.text},
+                timeout=10
+            )
+            if r.status_code == 200:
+                key = r.json()["result"]["key"]
+                return f"https://nekobin.com/{key}"
+        except Exception:
+            pass
 
-async def AMBOTOPBin(text):
-    resp = await post(f"{BASE}api/v2/paste", data=text)
-    if not resp["success"]:
-        return
-    link = BASE + resp["message"]
-    return link
+        return "Paste failed"
+
