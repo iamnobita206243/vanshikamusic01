@@ -1,7 +1,7 @@
 import requests
 
 
-class HotyBin:
+class HottyBin:
     def __init__(self, content: str):
         self.content = content
 
