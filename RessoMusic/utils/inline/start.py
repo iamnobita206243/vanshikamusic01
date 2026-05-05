@@ -28,7 +28,7 @@ def private_panel(_):
         InlineKeyboardButton("˹ᴄʜᴧɴɴєʟ˼", url="https://t.me/NOBITA_SUPP0RT"),
             #InlineKeyboardButton(text=_["S_B_7"], url=config.UPSTREAM_REPO),
         ],
-        [InlineKeyboardButton("˹ ϻʏ ϻᴧsᴛєʀ ˼ 👑", url=f"https://t.me/II_YOUR_NOBITA_II")
+        [InlineKeyboardButton("˹ ϻʏ ϻᴧsᴛєʀ ˼ 👑", url=f"https://t.me/II_NOBITA_DEFAULTERS_II")
 
         ],
         
