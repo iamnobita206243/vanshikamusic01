@@ -24,9 +24,9 @@ spotipy
 tgcrypto
 unidecode
 uvloop
-yt-dlp
+git+https://github.com/yt-dlp/yt-dlp.git
 youtube-search
 youtube-search-python
 httpx[http2]==0.27.2
 bs4
-
+git+https://github.com/TeamZyro/daxxhub.git
