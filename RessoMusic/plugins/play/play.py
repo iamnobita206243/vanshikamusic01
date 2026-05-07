@@ -1,6 +1,5 @@
 import random
 import string
-import aiohttp  
 
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, Message
@@ -26,77 +25,9 @@ from RessoMusic.utils.stream.stream import stream
 from config import BANNED_USERS, lyrical
 
 
-JIOSAAVN_CACHE = {}
-JIOSAAVN_API = "https://jiosavan-lilac.vercel.app/api/search/songs?query="
-
-async def fetch_jiosaavn_song(query: str):
-    """Custom API se song fetch karne ka helper function"""
-    if query in JIOSAAVN_CACHE:
-        return JIOSAAVN_CACHE[query]
-    
-    try:
-        async with aiohttp.ClientSession() as session:
-            formatted_query = query.replace(" ", "+")
-            async with session.get(f"{JIOSAAVN_API}{formatted_query}") as resp:
-                if resp.status == 200:
-                    data = await resp.json()
-                    
-                    # Handle API JSON structure safely
-                    results = []
-                    if isinstance(data, list):
-                        results = data
-                    elif isinstance(data, dict):
-                        results = data.get("data", {}).get("results", []) or data.get("results", []) or data.get("data", [])
-                    
-                    if results:
-                        song = results[0]
-                        title = song.get("name", song.get("title", query))
-                        
-                        # Get max quality audio link
-                        dl_links = song.get("downloadUrl", song.get("media_url", []))
-                        stream_link = ""
-                        if isinstance(dl_links, list) and len(dl_links) > 0:
-                            stream_link = dl_links[-1].get("link", dl_links[-1].get("url", ""))
-                        elif isinstance(dl_links, str):
-                            stream_link = dl_links
-                            
-                        if not stream_link:
-                            stream_link = song.get("url", "")
-                        
-                        # Get Thumbnail
-                        images = song.get("image", [])
-                        thumb = config.PLAYLIST_IMG_URL
-                        if isinstance(images, list) and len(images) > 0:
-                            thumb = images[-1].get("link", images[-1].get("url", thumb))
-                        elif isinstance(images, str):
-                            thumb = images
-
-                        dur = song.get("duration", 0)
-                        try: 
-                            dur = int(dur)
-                        except: 
-                            dur = 0
-                        
-                        # Details format built so stream() treats it perfectly
-                        details = {
-                            "title": title,
-                            "duration_min": seconds_to_min(dur) if dur else "0:00",
-                            "thumb": thumb,
-                            "link": stream_link,
-                            "vidid": song.get("id", "jio_song_custom")
-                        }
-                        
-                        JIOSAAVN_CACHE[query] = (details, details["vidid"])
-                        return details, details["vidid"]
-    except Exception as e:
-        print(f"JioSaavn Custom API Error: {e}")
-    
-    return None, None
-# ==========================================
-
-
 @app.on_message(
     filters.command(["play", "vplay", "cplay", "cvplay", "playforce", "vplayforce", "cplayforce", "cvplayforce"], prefixes=["/", "!", "%", ",", "", ".", "@"])
+ 
     & filters.group
     & ~BANNED_USERS
 )
@@ -396,22 +327,11 @@ async def play_commnd(
         query = message.text.split(None, 1)[1]
         if "-v" in query:
             query = query.replace("-v", "")
-            
-        jio_details, track_id = await fetch_jiosaavn_song(query)
-        
-        if jio_details and jio_details.get("link"):
-            details = jio_details
-            # Treat as youtube internally so standard buttons/queues work seamlessly
-            streamtype = "youtube" 
-        else:
-            # Fallback (Agar API down hui toh automatically Youtube se play hoga)
-            try:
-                details, track_id = await YouTube.track(query)
-            except:
-                return await mystic.edit_text(_["play_3"])
-            streamtype = "youtube"
-        # ==========================================
-
+        try:
+            details, track_id = await YouTube.track(query)
+        except:
+            return await mystic.edit_text(_["play_3"])
+        streamtype = "youtube"
     if str(playmode) == "Direct":
         if not plist_type:
             if details["duration_min"]:
@@ -497,7 +417,7 @@ async def play_commnd(
                     ),
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
-                return await play_logs(message, streamtype=f"Searched on JioSaavn Custom API")
+                return await play_logs(message, streamtype=f"Searched on Youtube")
             else:
                 buttons = track_markup(
                     _,
@@ -513,6 +433,7 @@ async def play_commnd(
                     reply_markup=InlineKeyboardMarkup(buttons),
                 )
                 return await play_logs(message, streamtype=f"URL Searched Inline")
+
 
 @app.on_callback_query(filters.regex("MusicStream") & ~BANNED_USERS)
 @languageCB
@@ -746,5 +667,6 @@ async def slider_queries(client, CallbackQuery, _):
         return await CallbackQuery.edit_message_media(
             media=med, reply_markup=InlineKeyboardMarkup(buttons)
         )
+
 
 
