@@ -52,7 +52,7 @@ PRIVACY_LINK = getenv("PRIVACY_LINK", "https://files.catbox.moe/jyeumn.jpg")
 
 API_URL = getenv("API_URL", 'https://api.nexgenbots.xyz') #youtube song url
 VIDEO_API_URL = getenv("VIDEO_API_URL", 'https://api.video.nexgenbots.xyz')
-API_KEY = getenv("API_KEY", "30DxNexGenBotsda3c23") # youtube song api key, generate free key or buy paid plan from https://console.nexgenbots.xyz
+API_KEY = getenv("API_KEY", "30DxNexGenBots5c0310") # youtube song api key, generate free key or buy paid plan from https://console.nexgenbots.xyz
 
 API2_URL = getenv("API2_URL", "https://shrutibots.site")
 
