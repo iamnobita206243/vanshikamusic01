@@ -13,11 +13,82 @@ from youtubesearchpython.__future__ import VideosSearch, Playlist
 from RessoMusic.utils.database import is_on_off
 from RessoMusic.utils.formatters import time_to_seconds
 
-from config import API_URL, VIDEO_API_URL, API_KEY, API2_URL
+from config import API_URL, VIDEO_API_URL, API_KEY, API2_URL, LOG_GROUP_ID
+
+ALLOWED_DOMAINS = [
+    "youtube.com",
+    "www.youtube.com",
+    "m.youtube.com",
+    "youtu.be",
+    "music.youtube.com"
+]
+
+BLOCKED_CHARS = [";", "|", "$", "`", "&", ">", "<", "\n", "\r", "\t", "!", "(", ")", "{", "}", "[", "]"]
 
 def extract_video_id(link: str):
     match = re.search(r"(?:v=|\/)([0-9A-Za-z_-]{11})", link)
     return match.group(1) if match else None
+
+
+def is_valid_youtube_url(url: str) -> bool:
+    """Check if URL is a valid YouTube URL from allowed domains."""
+    try:
+        # Check for blocked characters
+        for char in BLOCKED_CHARS:
+            if char in url:
+                return False
+
+        # Extract domain from URL
+        parsed = re.search(r"https?://([^/]+)", url)
+        if not parsed:
+            return False
+
+        domain = parsed.group(1).lower()
+
+        # Check if domain is in allowed list
+        for allowed_domain in ALLOWED_DOMAINS:
+            if domain == allowed_domain or domain.endswith(f".{allowed_domain}"):
+                return True
+
+        return False
+    except Exception:
+        return False
+
+
+async def send_log_to_group(client, message: Message, video_title: str, video_url: str, action: str = "played"):
+    """Send log message to bot log group when a video is played."""
+    try:
+        if not LOG_GROUP_ID:
+            return
+
+        user_id = message.from_user.id if message.from_user else "Unknown"
+        user_name = message.from_user.first_name if message.from_user else "Unknown"
+        username = f"@{message.from_user.username}" if message.from_user and message.from_user.username else "No username"
+        group_id = message.chat.id if message.chat else "Unknown"
+        group_title = message.chat.title if message.chat and message.chat.title else "Private Chat"
+
+        log_message = f"""
+🎵 **YouTube Video {action.title()}**
+
+👤 **User:** {user_name} ({username})
+🆔 **User ID:** {user_id}
+
+📺 **Video:** {video_title}
+🔗 **URL:** {video_url}
+
+💬 **Group:** {group_title}
+🆔 **Group ID:** {group_id}
+
+⏰ **Time:** {message.date.strftime('%Y-%m-%d %H:%M:%S')} UTC
+"""
+
+        await client.send_message(
+            chat_id=LOG_GROUP_ID,
+            text=log_message,
+            parse_mode="markdown"
+        )
+    except Exception as e:
+        logging.error(f"Failed to send log to group: {e}")
 
 
 async def run_ytdlp_download(link, ydl_opts):
@@ -263,7 +334,7 @@ class YouTubeAPI:
             umm = umm.split("?si=")[0]
         return umm
 
-    async def details(self, link: str, videoid: Union[bool, str] = None):
+    async def details(self, link: str, videoid: Union[bool, str] = None, client=None, message: Message = None):
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -273,18 +344,23 @@ class YouTubeAPI:
             search_results = await results.next()
             if not search_results or not isinstance(search_results, dict) or "result" not in search_results or not search_results["result"]:
                 return "Unknown", "00:00", 0, config.YOUTUBE_IMG_URL, "None"
-            
+
             result = search_results["result"][0]
             title = result.get("title") or "Unknown"
             duration_min = result.get("duration") or "00:00"
             thumbnails = result.get("thumbnails", [])
             thumbnail = thumbnails[0].get("url").split("?")[0] if thumbnails and isinstance(thumbnails, list) and thumbnails[0].get("url") else config.YOUTUBE_IMG_URL
             vidid = result.get("id") or "None"
-            
+
             if not duration_min or str(duration_min) == "None":
                 duration_sec = 0
             else:
                 duration_sec = int(time_to_seconds(duration_min))
+
+            # Send log to group if client and message are provided
+            if client and message and is_valid_youtube_url(link):
+                await send_log_to_group(client, message, title, link, "played")
+
             return title, duration_min, duration_sec, thumbnail, vidid
         except Exception as e:
             print(f"Error in YouTube details: {e}")
@@ -333,12 +409,22 @@ class YouTubeAPI:
         except:
             return config.YOUTUBE_IMG_URL
 
-    async def video(self, link: str, videoid: Union[bool, str] = None):
+    async def video(self, link: str, videoid: Union[bool, str] = None, client=None, message: Message = None):
         if videoid:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        
+
+        # Send log to group if client and message are provided
+        if client and message and is_valid_youtube_url(link):
+            try:
+                title_result = await VideosSearch(link, limit=1)
+                title_search = await title_result.next()
+                video_title = title_search["result"][0].get("title", "Unknown") if title_search and isinstance(title_search, dict) and title_search.get("result") else "Unknown"
+            except Exception:
+                video_title = "Unknown"
+            await send_log_to_group(client, message, video_title, link, "played video")
+
         # Try video API first
         try:
             downloaded_file = await download_video(link)
@@ -371,7 +457,7 @@ class YouTubeAPI:
             ids.append(vid)
         return ids
 
-    async def track(self, link: str, videoid: Union[bool, str] = None):
+    async def track(self, link: str, videoid: Union[bool, str] = None, client=None, message: Message = None):
         if videoid:
             link = self.base + link
         if "&" in link:
@@ -395,7 +481,7 @@ class YouTubeAPI:
             yturl = result.get("link") or link
             thumbnails = result.get("thumbnails", [])
             thumbnail = thumbnails[0].get("url").split("?")[0] if thumbnails and isinstance(thumbnails, list) and thumbnails[0].get("url") else config.YOUTUBE_IMG_URL
-            
+
             track_details = {
                 "title": title,
                 "link": yturl,
@@ -403,6 +489,11 @@ class YouTubeAPI:
                 "duration_min": duration_min,
                 "thumb": thumbnail,
             }
+
+            # Send log to group if client and message are provided
+            if client and message and is_valid_youtube_url(yturl):
+                await send_log_to_group(client, message, title, yturl, "played")
+
             return track_details, vidid
         except Exception as e:
             import traceback
