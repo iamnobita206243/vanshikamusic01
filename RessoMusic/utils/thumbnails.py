@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 from aiofiles.os import path as aiopath
 
 from ..logging import LOGGER
-from youtubesearchpython.__future__ import VideosSearch
+from py_yt import VideosSearch
 
 
 # ========================
