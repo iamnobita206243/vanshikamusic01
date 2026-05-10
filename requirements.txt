@@ -30,4 +30,5 @@ youtube-search-python
 httpx
 py-yt-search
 bs4
+pydub
 git+https://github.com/TeamZyro/daxxhub.git
