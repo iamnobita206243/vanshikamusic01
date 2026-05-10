@@ -1,4 +1,4 @@
-from pyrogram import Client, filters
+from pyrogram import Client, filters, enums
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from config import MUSIC_BOT_NAME
@@ -34,5 +34,5 @@ async def start(client: Client, message: Message):
                 ]
             ]
         ),
-        parse_mode="markdown"
+        parse_mode=enums.ParseMode.MARKDOWN
     )
