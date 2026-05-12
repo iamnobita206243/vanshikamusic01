@@ -44,7 +44,7 @@ async def play_commnd(
     fplay,
 ):
     mystic = await message.reply_sticker(
-    "AAMCBQADGQEAAR4dP2oC_7ICampzxWrcB2KVO5-w2DbJAAKKCgACa18xV4AnhAOM68fJAQAHbQADOwQ"
+    "CAACAgUAAxkBAAEeHT9qAv-yAmpqc8Vq3AdilTufsNg2yQACigoAAmtfMVeAJ4QDjOvHyTsE"
     )
     plist_id = None
     slider = None
@@ -457,7 +457,7 @@ async def play_music(client, CallbackQuery, _):
     except:
         pass
     mystic = await message.reply_sticker(
-    "AAMCBQADGQEAAR4dP2oC_7ICampzxWrcB2KVO5-w2DbJAAKKCgACa18xV4AnhAOM68fJAQAHbQADOwQ"
+    "CAACAgUAAxkBAAEeHT9qAv-yAmpqc8Vq3AdilTufsNg2yQACigoAAmtfMVeAJ4QDjOvHyTsE"
     )
     try:
         details, track_id = await YouTube.track(vidid, True)
