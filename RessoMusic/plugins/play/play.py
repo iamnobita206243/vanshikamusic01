@@ -456,8 +456,8 @@ async def play_music(client, CallbackQuery, _):
         await CallbackQuery.answer()
     except:
         pass
-    mystic = await CallbackQuery.message.reply_text(
-        _["play_2"].format(channel) if channel else _["play_1"]
+    mystic = await message.reply_sticker(
+    "AAMCBQADGQEAAR4dP2oC_7ICampzxWrcB2KVO5-w2DbJAAKKCgACa18xV4AnhAOM68fJAQAHbQADOwQ"
     )
     try:
         details, track_id = await YouTube.track(vidid, True)
