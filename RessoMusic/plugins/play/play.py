@@ -329,7 +329,7 @@ async def play_commnd(
 
         # 2. YAHAN YE NAYA CODE JODEIN (Link Block karne ke liye)
         if "http" in query or "youtube.com" in query or "youtu.be" in query:
-            return await mystic.edit_text("❌ **YouTube Links are blocked!**\n\nSirf gaane ka naam likh kar search karein.")
+            return await mystic.edit_text("❌ **ʏᴏᴜᴛᴜʙᴇ ʟɪɴᴋs ᴀʀᴇ ʙʟᴏᴄᴋᴇᴅ!**\n\nsɪʀғ ɢᴀᴀɴᴇ ᴋᴀ ɴᴀᴍᴇ ʟɪᴋʜ ᴋᴀʀ sᴇᴀʀᴄʜ ᴋᴀʀᴇɪɴ.ᴅʜᴀɴʏᴀᴡᴀᴀᴅ!")
 
         # 3. Baaki code niche waise hi rehne dein
         slider = True
