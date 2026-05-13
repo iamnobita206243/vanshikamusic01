@@ -323,8 +323,19 @@ async def play_commnd(
                 _["play_18"],
                 reply_markup=InlineKeyboardMarkup(buttons),
             )
-        slider = True
+
+        # 1. Pehle message se text (query) nikalein
         query = message.text.split(None, 1)[1]
+
+        # 2. YAHAN YE NAYA CODE JODEIN (Link Block karne ke liye)
+        if "http" in query or "youtube.com" in query or "youtu.be" in query:
+            return await mystic.edit_text("❌ **YouTube Links are blocked!**\n\nSirf gaane ka naam likh kar search karein.")
+
+        # 3. Baaki code niche waise hi rehne dein
+        slider = True
+        if "-v" in query:
+            query = query.replace("-v", "")
+            
         if "-v" in query:
             query = query.replace("-v", "")
         try:
