@@ -167,7 +167,7 @@ async def greet_new_member(_, member: ChatMemberUpdated):
 **☉ ᴜsᴇʀɴᴀᴍᴇ ⧽** {username}
 **☉ ᴛᴏᴛᴀʟ ᴍᴇᴍʙᴇʀs ⧽** {count}
 
-❖ ᴍᴀᴅᴇ ʙʏ ➛ [𝚴 𝐎 𝐁 𝚰 𝐓 𝚲](https://t.me/II_NOBITA_DEFAULTERS_II)
+❖ ᴍᴀᴅᴇ ʙʏ  ➛ [𝚴 𝐎 𝐁 𝚰 𝐓 𝚲](https://t.me/II_NOBITA_DEFAULTERS_II)
 
 **▬▭▬▭▬▭▬▭▬▭▬▭▬▭**
 
