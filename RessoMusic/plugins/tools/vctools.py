@@ -9,7 +9,7 @@ from RessoMusic import app
 # vc on
 @app.on_message(filters.video_chat_started)
 async def brah(_, msg):
-    await msg.reply("**😍ᴠɪᴅᴇᴏ ᴄʜᴀᴛ sᴛᴀʀᴛᴇᴅ🥳**")
+    await msg.reply("**😍ᴠɪᴅᴇᴏ ᴄʜᴀᴛ sᴛᴀʀᴛᴇᴅ ʙʏ ᴠᴀɴsʜɪᴋᴀ ᴍᴜsɪᴄ🥳**")
 
 
 # vc off
