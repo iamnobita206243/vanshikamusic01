@@ -10,7 +10,7 @@ from RessoMusic.utils.formatters import time_to_seconds
 import aiohttp
 from RessoMusic import LOGGER
 
-API_URL = "https://shrutibots.site"
+API_URL = "ShrutiBotsZAFkteaOEKNVelDWSUwo"
 DOWNLOAD_DIR = "downloads"
 
 
